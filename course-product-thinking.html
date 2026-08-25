@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product Thinking — Yah Academy</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0C1428">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Yah Academy">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy: #101A33;
+    --navy-soft: #182545;
+    --mist: #EEF1F6;
+    --mist-card: #FFFFFF;
+    --amber: #F0A63A;
+    --amber-deep: #D98A1E;
+    --teal: #2BC9A5;
+    --slate: #4A5568;
+    --slate-light: #8A93A6;
+    --white: #FFFFFF;
+
+    --display: 'Space Grotesk', sans-serif;
+    --body: 'Source Serif 4', serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+
+  *{ box-sizing: border-box; margin:0; padding:0; }
+  html{ scroll-behavior: smooth; }
+  body{
+    font-family: var(--body);
+    color: var(--slate);
+    background: var(--mist);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
+  }
+  a{ color:inherit; text-decoration:none; }
+  ul{ list-style:none; }
+  img{ max-width:100%; display:block; }
+  .wrap{ max-width: 1180px; margin:0 auto; padding: 0 32px; }
+  h1,h2,h3{ font-family: var(--display); color: var(--navy); font-weight: 600; letter-spacing: -0.01em; }
+  .eyebrow{ font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--amber-deep); font-weight: 500; }
+
+  /* Nav */
+  header{ position: sticky; top:0; z-index: 100; background: rgba(238,241,246,0.86); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(16,26,51,0.08); }
+  nav{ display:flex; align-items:center; justify-content:space-between; padding: 18px 32px; max-width: 1180px; margin:0 auto; }
+  .logo{ font-family: var(--display); font-weight:700; font-size:1.25rem; color: var(--navy); display:flex; align-items:center; gap:8px; }
+  .logo .dot{ width:9px; height:9px; border-radius:50%; background: var(--amber); display:inline-block; }
+  .nav-links{ display:flex; gap:32px; font-family: var(--display); font-size:0.92rem; font-weight:500; color: var(--navy); }
+  .nav-links a{ opacity:0.75; transition: opacity 0.2s; }
+  .nav-links a:hover{ opacity:1; }
+  .nav-cta{ background: var(--navy); color: var(--white); font-family: var(--display); font-weight:600; font-size:0.88rem; padding: 10px 20px; border-radius: 8px; transition: transform 0.15s, background 0.2s; }
+  .nav-cta:hover{ background: var(--navy-soft); transform: translateY(-1px); }
+
+  /* Breadcrumb + header */
+  .course-head{ padding: 40px 0 20px; }
+  .breadcrumb{ font-family: var(--mono); font-size:0.78rem; color: var(--slate-light); margin-bottom: 18px; }
+  .breadcrumb a{ color: var(--slate-light); }
+  .breadcrumb a:hover{ color: var(--navy); }
+  .course-title-row{ display:flex; justify-content:space-between; align-items:flex-start; gap: 24px; flex-wrap:wrap; }
+  .course-title-row h1{ font-size: clamp(1.8rem, 3vw, 2.5rem); max-width: 26ch; }
+  .meta-row{ display:flex; gap: 14px; align-items:center; margin: 14px 0 4px; flex-wrap:wrap; }
+  .level-tag{ font-family: var(--mono); font-size:0.68rem; letter-spacing:0.08em; text-transform:uppercase; padding: 4px 10px; border-radius: 20px; font-weight:500; background: rgba(43,201,165,0.14); color: #1a8f72; }
+  .meta-item{ font-family: var(--mono); font-size:0.8rem; color: var(--slate-light); }
+  .rating{ font-family: var(--mono); font-size:0.8rem; color: var(--amber-deep); }
+
+  /* Layout */
+  .course-layout{ display:grid; grid-template-columns: 1fr 320px; gap: 40px; padding: 30px 0 90px; align-items:start; }
+
+  /* Video player */
+  .player-shell{ background: var(--navy); border-radius: 18px; overflow:hidden; position:relative; }
+  .player-frame{ position:relative; aspect-ratio: 16/9; background:#0b1327; }
+  .player-frame video{ width:100%; height:100%; object-fit:cover; display:block; }
+  .player-badge{
+    position:absolute; top:14px; left:14px; background: rgba(16,26,51,0.75); color: var(--teal);
+    font-family: var(--mono); font-size:0.68rem; letter-spacing:0.06em; text-transform:uppercase;
+    padding: 5px 10px; border-radius: 20px; z-index: 2; backdrop-filter: blur(4px);
+  }
+  .player-info{ padding: 18px 22px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; }
+  .now-playing{ font-family: var(--display); color: var(--white); font-weight:600; font-size:1rem; }
+  .now-playing span{ display:block; font-family: var(--mono); font-size:0.72rem; color: var(--slate-light); font-weight:400; margin-top:2px; }
+  .player-nav-btns{ display:flex; gap:10px; }
+  .player-nav-btns button{
+    font-family: var(--display); font-size:0.82rem; font-weight:600; color: var(--white);
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14); border-radius:8px;
+    padding: 8px 14px; cursor:pointer; transition: background 0.2s;
+  }
+  .player-nav-btns button:hover{ background: rgba(255,255,255,0.16); }
+  .player-nav-btns button:disabled{ opacity:0.35; cursor:not-allowed; }
+
+  /* Tabs */
+  .tabs{ display:flex; gap: 22px; margin: 34px 0 20px; border-bottom: 1px solid rgba(16,26,51,0.1); }
+  .tab-btn{
+    font-family: var(--display); font-weight:600; font-size:0.92rem; color: var(--slate-light);
+    padding: 10px 2px 14px; background:none; border:none; cursor:pointer; position:relative;
+  }
+  .tab-btn.active{ color: var(--navy); }
+  .tab-btn.active::after{ content:""; position:absolute; left:0; right:0; bottom:-1px; height:2px; background: var(--amber); }
+  .tab-panel{ display:none; }
+  .tab-panel.active{ display:block; }
+
+  /* Curriculum module list on main column */
+  .module{ background: var(--mist-card); border:1px solid rgba(16,26,51,0.07); border-radius:14px; padding: 20px 22px; margin-bottom:14px; }
+  .module-head{ display:flex; justify-content:space-between; align-items:center; gap:10px; }
+  .module-head h3{ font-size: 1.02rem; }
+  .module-dur{ font-family: var(--mono); font-size:0.76rem; color: var(--slate-light); white-space:nowrap; }
+  .module p{ font-size:0.9rem; color: var(--slate); margin-top:8px; }
+  .module ul{ margin-top: 10px; padding-left: 0; }
+  .module ul li{ font-size:0.87rem; color: var(--slate); padding: 4px 0 4px 20px; position:relative; }
+  .module ul li::before{ content:"—"; position:absolute; left:0; color: var(--teal); }
+
+  .build-box{ background: var(--navy); border-radius:14px; padding: 22px 24px; margin-top: 20px; }
+  .build-box .eyebrow{ color: var(--teal); }
+  .build-box h3{ color: var(--white); font-size:1.05rem; margin: 8px 0 8px; }
+  .build-box p{ color: rgba(255,255,255,0.78); font-size:0.9rem; }
+
+  /* Sidebar: chapter list */
+  .sidebar{ position: sticky; top: 90px; }
+  .sidebar-card{ background: var(--mist-card); border:1px solid rgba(16,26,51,0.07); border-radius:16px; padding: 20px; margin-bottom: 18px; }
+  .sidebar-card h4{ font-family: var(--display); font-size:0.85rem; color: var(--navy); margin-bottom: 6px; }
+  .progress-track{ height:6px; background: rgba(16,26,51,0.08); border-radius:10px; overflow:hidden; margin: 10px 0 6px; }
+  .progress-fill{ height:100%; background: var(--teal); width: 22%; border-radius:10px; }
+  .progress-label{ font-family: var(--mono); font-size:0.72rem; color: var(--slate-light); }
+
+  .chapter-list{ display:flex; flex-direction:column; }
+  .chapter-item{
+    display:flex; align-items:center; gap: 12px; padding: 11px 6px; border-radius:10px; cursor:pointer;
+    transition: background 0.15s; border: none; background:none; width:100%; text-align:left; font-family: var(--body);
+  }
+  .chapter-item:hover{ background: rgba(43,201,165,0.08); }
+  .chapter-item.active{ background: rgba(240,166,58,0.12); }
+  .chapter-num{
+    width: 26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0;
+    font-family: var(--mono); font-size:0.72rem; font-weight:500; background: rgba(16,26,51,0.08); color: var(--slate);
+  }
+  .chapter-item.done .chapter-num{ background: var(--teal); color: var(--white); }
+  .chapter-item.active .chapter-num{ background: var(--amber); color: var(--navy); }
+  .chapter-text{ flex-grow:1; }
+  .chapter-title{ font-size:0.87rem; color: var(--navy); font-weight:500; display:block; }
+  .chapter-dur{ font-family: var(--mono); font-size:0.7rem; color: var(--slate-light); }
+
+  .instructor-card{ display:flex; gap:12px; align-items:center; }
+  .instructor-avatar{
+    width:46px; height:46px; border-radius:50%; background: linear-gradient(135deg, var(--navy), var(--navy-soft));
+    display:flex; align-items:center; justify-content:center; color: var(--teal); font-family: var(--display); font-weight:700;
+  }
+  .instructor-name{ font-family: var(--display); font-weight:600; color: var(--navy); font-size:0.92rem; }
+  .instructor-role{ font-family: var(--mono); font-size:0.72rem; color: var(--slate-light); }
+
+  .btn-primary{ background: var(--amber); color: var(--navy); font-family: var(--display); font-weight:700; padding: 13px 20px; border-radius: 10px; font-size:0.92rem; display:block; text-align:center; border:none; cursor:pointer; width:100%; box-shadow: 0 10px 24px -10px rgba(240,166,58,0.65); transition: transform 0.15s, box-shadow 0.2s; }
+  .btn-primary:hover{ transform: translateY(-2px); box-shadow: 0 14px 28px -10px rgba(240,166,58,0.8); }
+
+  /* Modal (shared pattern) */
+  .modal-overlay{ position: fixed; inset:0; background: rgba(10,14,28,0.6); backdrop-filter: blur(3px); display:none; align-items:center; justify-content:center; z-index: 1000; padding: 20px; }
+  .modal-overlay.open{ display:flex; }
+  .modal-box{ background: var(--white); border-radius:18px; padding: 34px 30px; max-width: 420px; width:100%; position: relative; box-shadow: 0 30px 60px -20px rgba(16,26,51,0.4); }
+  .modal-close{ position:absolute; top:14px; right:14px; width:30px; height:30px; border-radius:50%; border:none; background: var(--mist); color: var(--navy); font-size:1.1rem; cursor:pointer; line-height:1; }
+  .modal-box h3{ font-size:1.35rem; margin: 8px 0 10px; }
+  .modal-sub{ font-size:0.92rem; color: var(--slate); margin-bottom: 20px; }
+  .modal-box form{ display:flex; flex-direction:column; gap:12px; }
+  .modal-box input{ font-family: var(--body); font-size:0.95rem; padding: 12px 14px; border-radius:9px; border: 1.5px solid rgba(16,26,51,0.15); background: var(--mist); }
+  .modal-box input:focus{ outline:none; border-color: var(--teal); }
+  .modal-success{ text-align:center; padding: 10px 0; }
+  .modal-success p{ font-size:1rem; color: var(--navy); }
+  .toast{ position: fixed; bottom: 26px; left:50%; transform: translateX(-50%) translateY(20px); background: var(--navy); color: var(--white); font-family: var(--display); font-size:0.88rem; padding: 12px 20px; border-radius: 10px; opacity:0; pointer-events:none; transition: opacity 0.25s, transform 0.25s; z-index: 1100; }
+  .toast.show{ opacity:1; transform: translateX(-50%) translateY(0); }
+
+  :focus-visible{ outline: 2.5px solid var(--teal); outline-offset: 3px; }
+
+  footer{ background: var(--navy); border-top: 1px solid rgba(255,255,255,0.08); padding: 40px 0 120px; margin-top: 20px; }
+  .footer-bottom{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
+  .footer-bottom p{ color: var(--slate-light); font-size:0.8rem; }
+
+  @media (max-width: 900px){
+    .course-layout{ grid-template-columns: 1fr; }
+    .sidebar{ position:static; }
+  }
+  @media (max-width: 640px){
+    .nav-links{ display:none; }
+    .tabs{ overflow-x:auto; }
+  }
+
+  .level-tag.intermediate{ background: rgba(240,166,58,0.16); color: var(--amber-deep); }
+  .level-tag.advanced{ background: rgba(16,26,51,0.09); color: var(--navy); }
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <div class="logo"><span class="dot"></span>Yah Academy</div>
+    <div class="nav-links">
+      <a href="yah-academy.html#courses">Courses</a>
+      <a href="yah-academy.html#how">How it works</a>
+      <a href="yah-academy.html#pricing">Pricing</a>
+      <a href="about.html">About</a>
+    </div>
+    <a href="#" class="nav-cta" data-open-modal data-plan="Product Thinking">Start learning</a>
+  </nav>
+</header>
+
+<section class="course-head">
+  <div class="wrap">
+    <div class="breadcrumb"><a href="yah-academy.html">Yah Academy</a> / <a href="yah-academy.html#courses">Courses</a> / Product Thinking</div>
+    <div class="course-title-row">
+      <div>
+        <h1>Product Thinking</h1>
+        <div class="meta-row">
+          <span class="level-tag intermediate">Intermediate</span>
+          <span class="meta-item">7 weeks · 3–4 hrs/week</span>
+          <span class="rating">★ 4.7 (640 learners)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="course-layout">
+
+    <div>
+      <div class="player-shell">
+        <div class="player-frame">
+          <span class="player-badge">Sample preview clip</span>
+          <video id="lessonVideo" controls poster="" preload="metadata">
+            <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4">
+            Your browser doesn't support embedded video.
+          </video>
+        </div>
+        <div class="player-info">
+          <div class="now-playing">
+            Lesson 1 · Finding a Problem Worth Solving
+            <span>Module 1 of 7 · 6 min</span>
+          </div>
+          <div class="player-nav-btns">
+            <button id="prevLessonBtn" disabled>← Previous</button>
+            <button id="nextLessonBtn">Next lesson →</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="curriculum">Curriculum</button>
+        <button class="tab-btn" data-tab="project">Final Project</button>
+        <button class="tab-btn" data-tab="instructor">Instructor</button>
+      </div>
+
+      <div class="tab-panel active" id="tab-curriculum">
+        <div class="module">
+          <div class="module-head"><h3>Module 1 · Finding a Problem Worth Solving</h3><span class="module-dur">32 min</span></div>
+          <p>Most failed products solved a problem nobody had.</p>
+          <ul>
+            <li>Separating a real problem from a personal annoyance</li>
+            <li>Talking to potential users before designing anything</li>
+            <li>Project: write a one-paragraph problem statement</li>
+          </ul>
+        </div>
+        <div class="module">
+          <div class="module-head"><h3>Module 2 · From Problem to Rough Concept</h3><span class="module-dur">38 min</span></div>
+          <p>Sketch before you design — literally.</p>
+          <ul>
+            <li>Paper sketching as a thinking tool, not a formality</li>
+            <li>Narrowing ten ideas down to one worth testing</li>
+            <li>Scoping a first version that's actually buildable</li>
+          </ul>
+        </div>
+        <div class="module">
+          <div class="module-head"><h3>Module 3 · Wireframing With Intent</h3><span class="module-dur">44 min</span></div>
+          <p>Every screen should answer one question for the user.</p>
+          <ul>
+            <li>Wireframing tools that won't slow you down</li>
+            <li>Designing for the one action that matters most</li>
+            <li>Project: wireframe your core user flow</li>
+          </ul>
+        </div>
+        <div class="module">
+          <div class="module-head"><h3>Module 4 · Building a Clickable Prototype</h3><span class="module-dur">50 min</span></div>
+          <p>Make it feel real enough to actually test.</p>
+          <ul>
+            <li>Prototyping tools for non-designers</li>
+            <li>Faking just enough functionality to test the idea</li>
+            <li>Avoiding the trap of polishing too early</li>
+          </ul>
+        </div>
+        <div class="module">
+          <div class="module-head"><h3>Module 5 · Testing With Real Users</h3><span class="module-dur">46 min</span></div>
+          <p>Five honest sessions beat fifty guesses.</p>
+          <ul>
+            <li>Writing test tasks that don't lead the witness</li>
+            <li>Watching what people do, not just what they say</li>
+            <li>Project: run three user test sessions</li>
+          </ul>
+        </div>
+        <div class="module">
+          <div class="module-head"><h3>Module 6 · Turning Feedback Into Decisions</h3><span class="module-dur">40 min</span></div>
+          <p>Feedback is only useful once you know what to do with it.</p>
+          <ul>
+            <li>Separating signal from one loud opinion</li>
+            <li>Prioritizing changes against real constraints</li>
+            <li>Deciding what to explicitly ignore</li>
+          </ul>
+        </div>
+        <div class="module">
+          <div class="module-head"><h3>Module 7 · Making the Case to Stakeholders</h3><span class="module-dur">36 min</span></div>
+          <p>A good idea still has to get approved.</p>
+          <ul>
+            <li>Framing a pitch around the problem, not the feature</li>
+            <li>Answering 'why now' and 'why this' convincingly</li>
+            <li>Final review session with your mentor</li>
+          </ul>
+        </div>
+        <div class="build-box">
+          <span class="eyebrow">What you'll walk away with</span>
+          <h3>A tested prototype, validated by real users</h3>
+          <p>By the end of week seven you'll have taken one idea from a rough sketch to a clickable prototype, tested it with real users, and revised it based on what they actually did — not what they said they'd do.</p>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="tab-project">
+        <div class="module">
+          <div class="module-head"><h3>Final project: Idea to tested prototype</h3><span class="module-dur">Due week 7</span></div>
+          <p>Pick a real problem, sketch a solution, build a clickable prototype, and run it past at least three real users. You'll submit the prototype, your test notes, and what you changed because of them.</p>
+          <ul>
+            <li>Submitted through the course dashboard for mentor review</li>
+            <li>One round of written feedback before final grading</li>
+            <li>Passing projects earn a certificate and get added to your public profile</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="tab-instructor">
+        <div class="module">
+          <div class="instructor-card" style="margin-bottom:14px;">
+            <div class="instructor-avatar">P</div>
+            <div>
+              <div class="instructor-name">Priya Nandan</div>
+              <div class="instructor-role">Product-minded engineer · course instructor</div>
+            </div>
+          </div>
+          <p>Priya has shipped features that worked and features that quietly died in production, and built this course around telling the difference before you write any code.</p>
+        </div>
+      </div>
+    </div>
+
+    <aside class="sidebar">
+      <div class="sidebar-card">
+        <h4>Your progress</h4>
+        <div class="progress-track"><div class="progress-fill"></div></div>
+        <span class="progress-label">1 of 7 lessons watched</span>
+      </div>
+
+      <div class="sidebar-card">
+        <h4>Course content</h4>
+        <div class="chapter-list" id="chapterList">
+          <button class="chapter-item done" data-lesson="0">
+            <span class="chapter-num">✓</span>
+            <span class="chapter-text"><span class="chapter-title">Finding a Problem Worth Solving</span><span class="chapter-dur">32 min</span></span>
+          </button>
+          <button class="chapter-item active" data-lesson="1">
+            <span class="chapter-num">2</span>
+            <span class="chapter-text"><span class="chapter-title">From Problem to Rough Concept</span><span class="chapter-dur">38 min</span></span>
+          </button>
+          <button class="chapter-item" data-lesson="2">
+            <span class="chapter-num">3</span>
+            <span class="chapter-text"><span class="chapter-title">Wireframing With Intent</span><span class="chapter-dur">44 min</span></span>
+          </button>
+          <button class="chapter-item" data-lesson="3">
+            <span class="chapter-num">4</span>
+            <span class="chapter-text"><span class="chapter-title">Building a Clickable Prototype</span><span class="chapter-dur">50 min</span></span>
+          </button>
+          <button class="chapter-item" data-lesson="4">
+            <span class="chapter-num">5</span>
+            <span class="chapter-text"><span class="chapter-title">Testing With Real Users</span><span class="chapter-dur">46 min</span></span>
+          </button>
+          <button class="chapter-item" data-lesson="5">
+            <span class="chapter-num">6</span>
+            <span class="chapter-text"><span class="chapter-title">Turning Feedback Into Decisions</span><span class="chapter-dur">40 min</span></span>
+          </button>
+          <button class="chapter-item" data-lesson="6">
+            <span class="chapter-num">7</span>
+            <span class="chapter-text"><span class="chapter-title">Making the Case to Stakeholders</span><span class="chapter-dur">36 min</span></span>
+          </button>
+        </div>
+      </div>
+
+      <div class="sidebar-card">
+        <h4 style="margin-bottom:12px;">Taught by</h4>
+        <div class="instructor-card">
+          <div class="instructor-avatar">P</div>
+          <div>
+            <div class="instructor-name">Priya Nandan</div>
+            <div class="instructor-role">Product-minded engineer</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-primary" data-open-modal data-plan="Product Thinking">Enroll — free to start</button>
+    </aside>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap footer-bottom">
+    <p>© 2026 Yah Academy. All rights reserved.</p>
+    <p>Made for people who finish what they start.</p>
+  </div>
+</footer>
+
+<div class="modal-overlay" id="enrollModal" aria-hidden="true">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <button class="modal-close" id="modalClose" aria-label="Close">×</button>
+    <div id="modalFormView">
+      <span class="eyebrow" id="modalPlanLabel">Get started</span>
+      <h3 id="modalTitle">Enroll in Product Thinking</h3>
+      <p class="modal-sub">Enter your details to save your spot — no card required for the free course.</p>
+      <form id="enrollForm">
+        <input type="text" id="enrollName" placeholder="Full name" required>
+        <input type="email" id="enrollEmail" placeholder="Email address" required>
+        <button type="submit" class="btn-primary">Save my spot</button>
+      </form>
+    </div>
+    <div class="modal-success" id="modalSuccess" hidden>
+      <span class="eyebrow">You're in</span>
+      <h3>Saved!</h3>
+      <p>Your sign-up has been saved.</p>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  (function(){
+    // ---- Lesson switching ----
+    var lessons = [
+      { title: "Finding a Problem Worth Solving", dur: "32 min" },
+      { title: "From Problem to Rough Concept", dur: "38 min" },
+      { title: "Wireframing With Intent", dur: "44 min" },
+      { title: "Building a Clickable Prototype", dur: "50 min" },
+      { title: "Testing With Real Users", dur: "46 min" },
+      { title: "Turning Feedback Into Decisions", dur: "40 min" },
+      { title: "Making the Case to Stakeholders", dur: "36 min" }
+    ];
+    var currentLesson = 1;
+    var chapterItems = document.querySelectorAll('.chapter-item');
+    var nowPlaying = document.querySelector('.now-playing');
+    var prevBtn = document.getElementById('prevLessonBtn');
+    var nextBtn = document.getElementById('nextLessonBtn');
+
+    function renderLesson(idx){
+      currentLesson = idx;
+      chapterItems.forEach(function(item, i){
+        item.classList.toggle('active', i === idx);
+        item.classList.toggle('done', i < idx);
+        var numEl = item.querySelector('.chapter-num');
+        numEl.textContent = i < idx ? '✓' : (i + 1);
+      });
+      nowPlaying.innerHTML = 'Lesson ' + (idx+1) + ' · ' + lessons[idx].title +
+        '<span>Module ' + (idx+1) + ' of ' + lessons.length + ' · ' + lessons[idx].dur + '</span>';
+      prevBtn.disabled = idx === 0;
+      nextBtn.disabled = idx === lessons.length - 1;
+      nextBtn.textContent = idx === lessons.length - 1 ? 'Course complete' : 'Next lesson →';
+    }
+
+    chapterItems.forEach(function(item, i){
+      item.addEventListener('click', function(){ renderLesson(i); });
+    });
+    prevBtn.addEventListener('click', function(){ if(currentLesson > 0) renderLesson(currentLesson - 1); });
+    nextBtn.addEventListener('click', function(){ if(currentLesson < lessons.length - 1) renderLesson(currentLesson + 1); });
+    renderLesson(currentLesson);
+
+    // ---- Tabs ----
+    var tabBtns = document.querySelectorAll('.tab-btn');
+    tabBtns.forEach(function(btn){
+      btn.addEventListener('click', function(){
+        tabBtns.forEach(function(b){ b.classList.remove('active'); });
+        document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
+        btn.classList.add('active');
+        document.getElementById('tab-' + btn.getAttribute('data-tab')).classList.add('active');
+      });
+    });
+
+    // ---- Enroll modal (same pattern as main site) ----
+    var modal = document.getElementById('enrollModal');
+    var modalTitle = document.getElementById('modalTitle');
+    var modalPlanLabel = document.getElementById('modalPlanLabel');
+    var formView = document.getElementById('modalFormView');
+    var successView = document.getElementById('modalSuccess');
+    var form = document.getElementById('enrollForm');
+    var toast = document.getElementById('toast');
+    var toastTimer = null;
+    var submitBtn = form.querySelector('button[type="submit"]');
+
+    function openModal(plan){
+      formView.hidden = false;
+      successView.hidden = true;
+      form.reset();
+      modalPlanLabel.textContent = plan || 'Get started';
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModal(){
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+    function showToast(msg){
+      toast.textContent = msg;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function(){ toast.classList.remove('show'); }, 3200);
+    }
+
+    document.querySelectorAll('[data-open-modal]').forEach(function(el){
+      el.addEventListener('click', function(e){ e.preventDefault(); openModal(el.getAttribute('data-plan')); });
+    });
+    document.getElementById('modalClose').addEventListener('click', closeModal);
+    modal.addEventListener('click', function(e){ if(e.target === modal) closeModal(); });
+    document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && modal.classList.contains('open')) closeModal(); });
+
+    var storageAvailable = (function(){
+      try { var k='__t__'; window.localStorage.setItem(k,'1'); window.localStorage.removeItem(k); return true; }
+      catch(err){ return false; }
+    })();
+    var SIGNUP_PREFIX = 'yah_academy_signup:';
+
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      if(!storageAvailable){ showToast("Can't save — local storage is blocked in this browser."); return; }
+      var name = document.getElementById('enrollName').value.trim();
+      var email = document.getElementById('enrollEmail').value.trim();
+      var plan = modalPlanLabel.textContent;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Saving…';
+      var entry = { name: name, email: email, plan: plan, savedAt: new Date().toISOString() };
+      var key = SIGNUP_PREFIX + Date.now() + '-' + Math.random().toString(36).slice(2,8);
+      try {
+        window.localStorage.setItem(key, JSON.stringify(entry));
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Save my spot';
+        formView.hidden = true;
+        successView.hidden = false;
+      } catch(err){
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Save my spot';
+        showToast('Save failed — please try again.');
+      }
+    });
+  })();
+</script>
+
+<script async type="module" src="https://interfaces.zapier.com/assets/web-components/zapier-interfaces/zapier-interfaces.esm.js"></script>
+<zapier-interfaces-chatbot-embed is-popup="true" chatbot-id="cmt8j4nxj005rnvc2pze9uq6d"></zapier-interfaces-chatbot-embed>
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register('sw.js').catch(function(err){
+        console.warn('Service worker registration failed:', err);
+      });
+    });
+  }
+</script>
+</body>
+</html>
