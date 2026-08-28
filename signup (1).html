@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create your account — Yah Academy</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0C1428">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy: #0C1428;
+    --navy-soft: #16213F;
+    --navy-deep: #060A16;
+    --mist: #EEF1F6;
+    --mist-card: #FFFFFF;
+    --amber: #F0A63A;
+    --amber-deep: #D98A1E;
+    --amber-glow: #FFC876;
+    --teal: #2BC9A5;
+    --teal-glow: #6EE7C8;
+    --slate: #4A5568;
+    --slate-light: #8A93A6;
+    --white: #FFFFFF;
+    --border-soft: rgba(16,26,51,0.08);
+    --shadow-lift: 0 24px 48px -18px rgba(12,20,40,0.22);
+    --shadow-soft: 0 12px 28px -14px rgba(12,20,40,0.16);
+
+    --display: 'Space Grotesk', sans-serif;
+    --body: 'Source Serif 4', serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+
+  *{ box-sizing: border-box; margin:0; padding:0; }
+  html{ scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+
+  body{
+    font-family: var(--body);
+    color: var(--slate);
+    background: var(--mist);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  a{ color: inherit; text-decoration: none; }
+  a:focus-visible, button:focus-visible, input:focus-visible{
+    outline: 2px solid var(--amber); outline-offset: 2px;
+  }
+
+  /* ---- Split layout ---- */
+  .auth-shell{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 100vh;
+  }
+
+  /* ---- Left: brand panel ---- */
+  .auth-brand{
+    background: linear-gradient(165deg, var(--navy) 0%, var(--navy-soft) 55%, var(--navy-deep) 100%);
+    color: var(--white);
+    padding: 48px 56px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+  }
+  /* soft amber bloom in the corner */
+  .auth-brand::before{
+    content:""; position:absolute; width: 420px; height: 420px;
+    top: -140px; right: -140px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(240,166,58,0.16) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .auth-brand::after{
+    content:""; position:absolute; width: 340px; height: 340px;
+    bottom: -120px; left: -100px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(43,201,165,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .brand-logo{
+    display:flex; align-items:center; gap:10px;
+    font-family: var(--display); font-weight:700; font-size:1.15rem;
+    color: var(--white); position: relative; z-index: 1;
+  }
+  .brand-logo .dot{
+    width:10px; height:10px; border-radius:50%; background: var(--amber);
+    box-shadow: 0 0 12px rgba(240,166,58,0.8);
+  }
+
+  .brand-body{ position: relative; z-index: 1; max-width: 30ch; }
+  .brand-body h1{
+    font-family: var(--display); font-weight: 700;
+    font-size: clamp(1.9rem, 3.2vw, 2.7rem);
+    line-height: 1.15; letter-spacing: -0.02em; color: var(--white);
+    margin-bottom: 18px;
+  }
+  .brand-body p{
+    color: rgba(255,255,255,0.72); font-size: 1.02rem;
+  }
+
+  .brand-points{
+    list-style: none; margin-top: 30px;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .brand-points li{
+    display:flex; align-items:flex-start; gap: 11px;
+    color: rgba(255,255,255,0.85); font-size: 0.95rem;
+  }
+  .brand-points .check{
+    width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0;
+    background: rgba(43,201,165,0.18); color: var(--teal);
+    display:flex; align-items:center; justify-content:center;
+    font-size: 0.7rem; margin-top: 3px;
+  }
+
+  .brand-foot{
+    position: relative; z-index: 1;
+    font-family: var(--mono); font-size: 0.78rem;
+    color: rgba(255,255,255,0.42);
+  }
+
+  /* ---- Right: form panel ---- */
+  .auth-panel{
+    display:flex; align-items:center; justify-content:center;
+    padding: 48px 40px;
+  }
+  .auth-card{ width: 100%; max-width: 420px; }
+
+  .auth-head{ margin-bottom: 30px; }
+  .auth-head .eyebrow{
+    font-family: var(--mono); font-size: 0.76rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--amber-deep); display:block; margin-bottom: 10px;
+  }
+  .auth-head h2{
+    font-family: var(--display); font-weight: 700; font-size: 1.85rem;
+    color: var(--navy); letter-spacing: -0.01em; line-height: 1.2;
+  }
+  .auth-head p{ margin-top: 8px; font-size: 0.96rem; color: var(--slate); }
+
+  /* tabs */
+  .auth-tabs{
+    display:flex; background: rgba(16,26,51,0.05); border-radius: 11px;
+    padding: 4px; margin-bottom: 26px;
+  }
+  .auth-tab{
+    flex:1; text-align:center; padding: 10px 0; border:none; cursor:pointer;
+    background: transparent; border-radius: 8px;
+    font-family: var(--display); font-weight: 600; font-size: 0.92rem;
+    color: var(--slate-light); transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  }
+  .auth-tab.active{
+    background: var(--white); color: var(--navy);
+    box-shadow: 0 2px 8px -2px rgba(12,20,40,0.14);
+  }
+
+  .field{ margin-bottom: 17px; }
+  .field label{
+    display:block; font-family: var(--display); font-weight:500;
+    font-size: 0.85rem; color: var(--navy); margin-bottom: 7px;
+  }
+  .field input{
+    width:100%; font-family: var(--body); font-size: 0.97rem;
+    color: var(--navy); background: var(--white);
+    border: 1.5px solid rgba(16,26,51,0.22); border-radius: 11px;
+    padding: 13px 15px; outline: none;
+    box-shadow: inset 0 1px 2px rgba(12,20,40,0.05);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .field input:hover{ border-color: rgba(16,26,51,0.35); }
+  .field input::placeholder{ color: var(--slate-light); }
+  .field input:focus{
+    border-color: var(--amber);
+    box-shadow: 0 0 0 3px rgba(240,166,58,0.16);
+  }
+  .field .hint{
+    font-size: 0.8rem; color: var(--slate-light); margin-top: 6px;
+  }
+
+  .field-row{ display:grid; grid-template-columns: 1fr 1fr; gap: 13px; }
+
+  .auth-submit{
+    width:100%; margin-top: 8px; border:none; cursor:pointer;
+    font-family: var(--display); font-weight: 700; font-size: 1rem;
+    color: var(--navy); padding: 14px 0; border-radius: 11px;
+    background: linear-gradient(135deg, var(--amber-glow), var(--amber));
+    box-shadow: 0 12px 26px -10px rgba(240,166,58,0.55);
+    transition: transform 0.18s cubic-bezier(.2,.8,.2,1), box-shadow 0.18s;
+  }
+  .auth-submit:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 18px 34px -10px rgba(240,166,58,0.68);
+  }
+  .auth-submit:disabled{ opacity:0.6; cursor:default; transform:none; }
+
+  .auth-alt{
+    display:flex; align-items:center; gap: 14px;
+    margin: 24px 0 20px; color: var(--slate-light);
+    font-family: var(--mono); font-size: 0.74rem; letter-spacing: 0.06em;
+  }
+  .auth-alt::before, .auth-alt::after{
+    content:""; flex:1; height:1px; background: var(--border-soft);
+  }
+
+  .oauth-btn{
+    width:100%; display:flex; align-items:center; justify-content:center; gap:10px;
+    padding: 12px 0; border-radius: 11px; cursor:pointer;
+    background: var(--white); border: 1.5px solid rgba(16,26,51,0.22);
+    font-family: var(--display); font-weight:600; font-size:0.93rem; color: var(--navy);
+    transition: border-color 0.2s, transform 0.18s, box-shadow 0.2s;
+  }
+  .oauth-btn:hover{
+    border-color: rgba(16,26,51,0.2); transform: translateY(-1px);
+    box-shadow: var(--shadow-soft);
+  }
+  .oauth-btn svg{ width:18px; height:18px; }
+
+  .auth-switch{
+    margin-top: 22px; text-align:center;
+    font-size: 0.92rem; color: var(--slate);
+  }
+  .auth-switch button{
+    background:none; border:none; cursor:pointer; padding:0;
+    font-family: var(--body); font-size: inherit;
+    color: var(--amber-deep); font-weight: 600; text-decoration: underline;
+  }
+
+  .auth-note{
+    margin-top: 18px; font-size: 0.82rem; color: var(--slate-light);
+    text-align:center; line-height:1.5;
+  }
+  .auth-note a{ color: var(--slate); text-decoration: underline; }
+
+  .form-msg{
+    margin-top: 14px; font-size: 0.88rem; text-align:center; min-height: 1.2em;
+  }
+  .form-msg.err{ color: #C0392B; }
+  .form-msg.ok{ color: #1B8A6B; }
+
+  .back-link{
+    display:inline-flex; align-items:center; gap:6px;
+    font-family: var(--mono); font-size: 0.78rem; color: var(--slate-light);
+    margin-bottom: 26px;
+  }
+  .back-link:hover{ color: var(--navy); }
+
+  .hidden{ display:none !important; }
+
+  /* ---- Mobile ---- */
+  @media (max-width: 860px){
+    .auth-shell{ grid-template-columns: 1fr; }
+    .auth-brand{
+      padding: 30px 28px 34px;
+    }
+    .brand-body h1{ font-size: 1.6rem; }
+    .brand-points{ display:none; }
+    .brand-foot{ display:none; }
+    .brand-body{ max-width: none; margin-top: 20px; }
+    .auth-panel{ padding: 34px 24px 50px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="auth-shell">
+
+  <!-- Left: brand -->
+  <aside class="auth-brand">
+    <div class="brand-logo"><span class="dot"></span>Yah Academy</div>
+
+    <div class="brand-body">
+      <h1>Start building something real.</h1>
+      <p>One account gets you your project briefs, mentor feedback, and everything you finish along the way.</p>
+
+      <ul class="brand-points">
+        <li><span class="check">✓</span> Your first course is free to start</li>
+        <li><span class="check">✓</span> Progress saved across every device</li>
+        <li><span class="check">✓</span> Project reviews from working practitioners</li>
+        <li><span class="check">✓</span> A certificate on every course you finish</li>
+      </ul>
+    </div>
+
+    <div class="brand-foot">14,200+ learners · 92% finish their first path</div>
+  </aside>
+
+  <!-- Right: form -->
+  <main class="auth-panel">
+    <div class="auth-card">
+
+      <a href="yah-academy.html" class="back-link">← Back to site</a>
+
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tabSignup" type="button">Sign up</button>
+        <button class="auth-tab" id="tabLogin" type="button">Log in</button>
+      </div>
+
+      <!-- SIGN UP -->
+      <div id="signupView">
+        <div class="auth-head">
+          <span class="eyebrow">Create your account</span>
+          <h2>Make your first project real</h2>
+          <p>Takes less than a minute. No card needed to start.</p>
+        </div>
+
+        <form id="signupForm" novalidate>
+          <div class="field-row">
+            <div class="field">
+              <label for="su-first">First name</label>
+              <input type="text" id="su-first" name="firstName" autocomplete="given-name" required>
+            </div>
+            <div class="field">
+              <label for="su-last">Last name</label>
+              <input type="text" id="su-last" name="lastName" autocomplete="family-name" required>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="su-email">Email</label>
+            <input type="email" id="su-email" name="email" placeholder="you@example.com" autocomplete="email" required>
+          </div>
+
+          <div class="field">
+            <label for="su-password">Password</label>
+            <input type="password" id="su-password" name="password" placeholder="At least 8 characters" autocomplete="new-password" required minlength="8">
+            <div class="hint">Use 8 or more characters, with a mix of letters and numbers.</div>
+          </div>
+
+          <button type="submit" class="auth-submit">Create account</button>
+          <p class="form-msg" id="signupMsg" role="status" aria-live="polite"></p>
+        </form>
+
+        <div class="auth-alt">OR</div>
+
+        <button class="oauth-btn" type="button" id="githubSignup">
+          <svg viewBox="0 0 24 24" fill="#0C1428"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.2.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.2-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.4 11.4 0 0 1 6 0C17.6 4.7 18.6 5 18.6 5c.6 1.6.2 2.8.1 3.1.8.9 1.2 1.9 1.2 3.2 0 4.5-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
+          Continue with GitHub
+        </button>
+
+        <p class="auth-switch">Already have an account? <button type="button" id="goLogin">Log in</button></p>
+
+        <p class="auth-note">By creating an account you agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a>.</p>
+      </div>
+
+      <!-- LOG IN -->
+      <div id="loginView" class="hidden">
+        <div class="auth-head">
+          <span class="eyebrow">Welcome back</span>
+          <h2>Pick up where you left off</h2>
+          <p>Your progress and project briefs are waiting.</p>
+        </div>
+
+        <form id="loginForm" novalidate>
+          <div class="field">
+            <label for="li-email">Email</label>
+            <input type="email" id="li-email" name="email" placeholder="you@example.com" autocomplete="email" required>
+          </div>
+
+          <div class="field">
+            <label for="li-password">Password</label>
+            <input type="password" id="li-password" name="password" placeholder="Your password" autocomplete="current-password" required>
+            <div class="hint"><a href="#" style="color:var(--amber-deep);">Forgot your password?</a></div>
+          </div>
+
+          <button type="submit" class="auth-submit">Log in</button>
+          <p class="form-msg" id="loginMsg" role="status" aria-live="polite"></p>
+        </form>
+
+        <div class="auth-alt">OR</div>
+
+        <button class="oauth-btn" type="button" id="githubLogin">
+          <svg viewBox="0 0 24 24" fill="#0C1428"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.2.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.2-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.4 11.4 0 0 1 6 0C17.6 4.7 18.6 5 18.6 5c.6 1.6.2 2.8.1 3.1.8.9 1.2 1.9 1.2 3.2 0 4.5-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
+          Continue with GitHub
+        </button>
+
+        <p class="auth-switch">New here? <button type="button" id="goSignup">Create an account</button></p>
+      </div>
+
+    </div>
+  </main>
+
+</div>
+
+<script>
+  (function(){
+    var tabSignup = document.getElementById('tabSignup');
+    var tabLogin  = document.getElementById('tabLogin');
+    var signupView = document.getElementById('signupView');
+    var loginView  = document.getElementById('loginView');
+
+    function showSignup(){
+      tabSignup.classList.add('active');
+      tabLogin.classList.remove('active');
+      signupView.classList.remove('hidden');
+      loginView.classList.add('hidden');
+    }
+    function showLogin(){
+      tabLogin.classList.add('active');
+      tabSignup.classList.remove('active');
+      loginView.classList.remove('hidden');
+      signupView.classList.add('hidden');
+    }
+
+    tabSignup.addEventListener('click', showSignup);
+    tabLogin.addEventListener('click', showLogin);
+    document.getElementById('goLogin').addEventListener('click', showLogin);
+    document.getElementById('goSignup').addEventListener('click', showSignup);
+
+    // ---- Supabase auth --------------------------------------------------
+    // These two values are safe to sit in public code: Supabase protects
+    // your data with Row Level Security, not by hiding them.
+    var SUPABASE_URL = 'https://vvxopiwwgijswrdgnlhk.supabase.co';
+    var SUPABASE_KEY = 'sb_publishable_aHnimkL54qZrshToNZp6Ow_VUfeizPE';
+
+    var signupMsg = document.getElementById('signupMsg');
+    var loginMsg  = document.getElementById('loginMsg');
+    var sb = null;
+
+    // The Supabase library loads as a module. jsDelivr is the primary CDN;
+    // esm.sh is a fallback in case it's blocked or unreachable.
+    function loadSupabase(){
+      return import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm')
+        .catch(function(){
+          return import('https://esm.sh/@supabase/supabase-js@2');
+        });
+    }
+
+    loadSupabase()
+      .then(function(mod){
+        sb = mod.createClient(SUPABASE_URL, SUPABASE_KEY);
+      })
+      .catch(function(err){
+        console.error('Supabase failed to load:', err);
+        var note = 'Couldn\u2019t reach the sign-in service. If you\u2019re opening this file directly from your computer, upload it to your site first \u2014 it needs to run on a real web address.';
+        signupMsg.className = 'form-msg err';
+        signupMsg.textContent = note;
+        loginMsg.className = 'form-msg err';
+        loginMsg.textContent = note;
+      });
+
+    function notReady(msgEl){
+      msgEl.className = 'form-msg err';
+      msgEl.textContent = 'Still connecting \u2014 give it a second and try again.';
+    }
+
+    function setBusy(form, busy, label){
+      var btn = form.querySelector('.auth-submit');
+      btn.disabled = busy;
+      btn.textContent = busy ? 'Please wait\u2026' : label;
+    }
+
+    // ---- Sign up ----
+    var signupForm = document.getElementById('signupForm');
+    signupForm.addEventListener('submit', function(e){
+      e.preventDefault();
+
+      var first = document.getElementById('su-first').value.trim();
+      var last  = document.getElementById('su-last').value.trim();
+      var email = document.getElementById('su-email').value.trim();
+      var pass  = document.getElementById('su-password').value;
+
+      if (!first || !last){
+        signupMsg.className = 'form-msg err';
+        signupMsg.textContent = 'Please enter your first and last name.';
+        return;
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+        signupMsg.className = 'form-msg err';
+        signupMsg.textContent = 'That email address doesn\u2019t look right.';
+        return;
+      }
+      if (pass.length < 8){
+        signupMsg.className = 'form-msg err';
+        signupMsg.textContent = 'Your password needs to be at least 8 characters.';
+        return;
+      }
+      if (!sb){ notReady(signupMsg); return; }
+
+      setBusy(signupForm, true);
+      signupMsg.className = 'form-msg';
+      signupMsg.textContent = '';
+
+      sb.auth.signUp({
+        email: email,
+        password: pass,
+        options: { data: { first_name: first, last_name: last } }
+      })
+      .then(function(res){
+        if (res.error){
+          signupMsg.className = 'form-msg err';
+          signupMsg.textContent = res.error.message;
+          return;
+        }
+        signupForm.reset();
+        signupMsg.className = 'form-msg ok';
+        signupMsg.textContent = 'Account created. Check your email to confirm it, then log in.';
+      })
+      .catch(function(err){
+        console.error(err);
+        signupMsg.className = 'form-msg err';
+        signupMsg.textContent = 'Something went wrong. Please try again.';
+      })
+      .then(function(){ setBusy(signupForm, false, 'Create account'); });
+    });
+
+    // ---- Log in ----
+    var loginForm = document.getElementById('loginForm');
+    loginForm.addEventListener('submit', function(e){
+      e.preventDefault();
+
+      var email = document.getElementById('li-email').value.trim();
+      var pass  = document.getElementById('li-password').value;
+
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+        loginMsg.className = 'form-msg err';
+        loginMsg.textContent = 'That email address doesn\u2019t look right.';
+        return;
+      }
+      if (!pass){
+        loginMsg.className = 'form-msg err';
+        loginMsg.textContent = 'Please enter your password.';
+        return;
+      }
+      if (!sb){ notReady(loginMsg); return; }
+
+      setBusy(loginForm, true);
+      loginMsg.className = 'form-msg';
+      loginMsg.textContent = '';
+
+      sb.auth.signInWithPassword({ email: email, password: pass })
+        .then(function(res){
+          if (res.error){
+            loginMsg.className = 'form-msg err';
+            loginMsg.textContent = res.error.message;
+            return;
+          }
+          var name = (res.data.user &&
+                      res.data.user.user_metadata &&
+                      res.data.user.user_metadata.first_name) || '';
+          loginMsg.className = 'form-msg ok';
+          loginMsg.textContent = name
+            ? ('Welcome back, ' + name + '. Taking you to the courses\u2026')
+            : 'Logged in. Taking you to the courses\u2026';
+          setTimeout(function(){ window.location.href = 'yah-academy.html'; }, 1200);
+        })
+        .catch(function(err){
+          console.error(err);
+          loginMsg.className = 'form-msg err';
+          loginMsg.textContent = 'Something went wrong. Please try again.';
+        })
+        .then(function(){ setBusy(loginForm, false, 'Log in'); });
+    });
+
+    // ---- GitHub sign-in (same call for both buttons) ----
+    function githubAuth(msgEl){
+      if (!sb){ notReady(msgEl); return; }
+      msgEl.className = 'form-msg';
+      msgEl.textContent = 'Opening GitHub\u2026';
+
+      sb.auth.signInWithOAuth({
+        provider: 'github',
+        options: { redirectTo: window.location.origin + window.location.pathname }
+      }).then(function(res){
+        if (res.error){
+          msgEl.className = 'form-msg err';
+          msgEl.textContent = res.error.message;
+        }
+      });
+    }
+    document.getElementById('githubSignup').addEventListener('click', function(){ githubAuth(signupMsg); });
+    document.getElementById('githubLogin').addEventListener('click', function(){ githubAuth(loginMsg); });
+
+    // If someone is already logged in, greet them rather than showing a blank form
+    setTimeout(function(){
+      if (!sb) return;
+      sb.auth.getUser().then(function(res){
+        if (res.data && res.data.user){
+          var n = (res.data.user.user_metadata && res.data.user.user_metadata.first_name) || '';
+          signupMsg.className = 'form-msg ok';
+          signupMsg.textContent = n ? ('You\u2019re already logged in as ' + n + '.') : 'You\u2019re already logged in.';
+        }
+      });
+    }, 1500);
+  })();
+</script>
+
+</body>
+</html>
